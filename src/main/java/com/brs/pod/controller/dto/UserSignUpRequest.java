@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class UserSignUpRequestDto {
+public class UserSignUpRequest {
     
     @Size(min = 5, max = 10, message = "아이디는 5자 이상 10자 이하여야 합니다.")
     private String name;

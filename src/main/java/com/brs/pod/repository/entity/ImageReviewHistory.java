@@ -18,7 +18,7 @@ public class ImageReviewHistory {
     private Integer id;
     private ReviewStatus reviewStatus;
     private String reason;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "product_image_id")

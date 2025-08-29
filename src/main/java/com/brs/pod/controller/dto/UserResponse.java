@@ -9,13 +9,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserResponseDto {
+public class UserResponse {
     private final Integer id;
     private final String name;
     private final LocalDateTime createdAt;
 
-    public static UserResponseDto from(User user) {
-        return new UserResponseDto(
+    public static UserResponse from(User user) {
+        return new UserResponse(
             user.getId(),
             user.getName(),
             user.getCreatedAt()

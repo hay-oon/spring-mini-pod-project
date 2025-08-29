@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.User;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +18,7 @@ public class Product {
     private Integer id;
     private String title;
     private ReviewStatus currentStatus;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
@@ -28,4 +27,14 @@ public class Product {
     @ManyToOne(optional = false)
     @JoinColumn(name = "base_product_id")
     private BaseProduct baseProduct;
+
+    public static Product create(String title, BaseProduct baseProduct, User user) {
+        Product product = new Product();
+        product.title = title;
+        product.currentStatus = ReviewStatus.REGISTERED;
+        product.createdAt = LocalDateTime.now();
+        product.user = user; 
+        product.baseProduct = baseProduct;
+        return product;
+    }
 }

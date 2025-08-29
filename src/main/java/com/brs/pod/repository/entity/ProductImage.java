@@ -16,11 +16,20 @@ public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String image_url;
+    private String imageUrl;
     private ReviewStatus currentStatus;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public static ProductImage create(String imageUrl, Product product) {
+        ProductImage image = new ProductImage();
+        image.imageUrl = imageUrl;
+        image.currentStatus = ReviewStatus.REGISTERED;
+        image.createdAt = LocalDateTime.now();
+        image.product = product;
+        return image;
+    }
 }

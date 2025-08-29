@@ -18,7 +18,7 @@ public class ProductReviewHistory {
     private Integer id;
     private ReviewStatus reviewStatus;
     private String reason;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id")

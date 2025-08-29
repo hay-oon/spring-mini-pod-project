@@ -19,6 +19,6 @@ public class BaseProduct {
     private Integer id;
     private String name;
     private Integer price;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
 }

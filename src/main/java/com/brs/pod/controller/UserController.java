@@ -1,7 +1,7 @@
 package com.brs.pod.controller;
 
-import com.brs.pod.controller.dto.UserSignUpRequestDto;
-import com.brs.pod.controller.dto.UserResponseDto;
+import com.brs.pod.controller.dto.UserSignUpRequest;
+import com.brs.pod.controller.dto.UserResponse;
 import com.brs.pod.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signUp(@Valid @RequestBody UserSignUpRequestDto request) {
+    public ResponseEntity<UserResponse> signUp(@Valid @RequestBody UserSignUpRequest request) {
         return ResponseEntity.ok(userService.signUp(request));
     }
 }
