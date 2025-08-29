@@ -22,8 +22,8 @@ public class Product {
     private LocalDateTime created_at;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "seller_id")
-    private Seller seller;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "base_product_id")
