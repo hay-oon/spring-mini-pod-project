@@ -1,19 +1,20 @@
 package com.brs.pod.controller;
 
-import com.brs.pod.controller.dto.CreateProductRequest;
-import com.brs.pod.controller.dto.ProductResponse;
-import com.brs.pod.controller.dto.ProductDetailResponse;
+import com.brs.pod.controller.dto.*;
 import com.brs.pod.service.ProductService;
 import com.brs.pod.repository.entity.User;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -21,6 +22,7 @@ public class ProductController {
     
     private final ProductService productService;
 
+    // 3. 사진 업로드를 통한 상품 생성 API
     @PostMapping
     public ResponseEntity<ProductResponse> createProduct(
             @Valid @RequestBody CreateProductRequest request) {
@@ -31,6 +33,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProduct(request, user));
     }
 
+    // 4. 현재 로그인한 유저가 등록한 상품 조회 API
     @GetMapping("/my")
     public ResponseEntity<List<ProductDetailResponse>> getMyProducts() {
         User user = (User) SecurityContextHolder.getContext()
@@ -38,5 +41,13 @@ public class ProductController {
             .getPrincipal();
 
         return ResponseEntity.ok(productService.getUserProducts(user));
+    }
+
+    // 5. 등록된 모든 상품 조회 API
+    @GetMapping
+    public ResponseEntity<PageResponse<ProductListResponse>> getRegisteredProducts(
+            @RequestParam(defaultValue = "0") @Min(0) int page,
+            @RequestParam(defaultValue = "10") @Min(1) int size) {
+        return ResponseEntity.ok(productService.getRegisteredProducts(page, size));
     }
 }

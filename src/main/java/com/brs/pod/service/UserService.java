@@ -17,6 +17,7 @@ public class UserService implements UserDetailsService {
     
     private final UserRepository userRepository;
 
+    // 2. 유저 회원가입 API
     @Transactional
     public UserResponse signUp(UserSignUpRequest request) {
         // 중복 아이디 체크

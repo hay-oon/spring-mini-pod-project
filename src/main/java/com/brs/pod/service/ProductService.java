@@ -1,17 +1,14 @@
 package com.brs.pod.service;
 
-import com.brs.pod.controller.dto.CreateProductRequest;
-import com.brs.pod.controller.dto.ProductResponse;
-import com.brs.pod.controller.dto.ProductDetailResponse;
+import com.brs.pod.controller.dto.*;
 import com.brs.pod.repository.*;
-import com.brs.pod.repository.entity.BaseProduct;
-import com.brs.pod.repository.entity.Product;
-import com.brs.pod.repository.entity.ProductImage;
-import com.brs.pod.repository.entity.ProductReviewHistory;
+import com.brs.pod.repository.entity.*;
+import com.brs.pod.repository.vo.ReviewStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.brs.pod.repository.entity.User;
 
 import java.util.List;
 
@@ -24,6 +21,7 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final ProductReviewHistoryRepository productReviewHistoryRepository;
 
+    // 3. 사진 업로드를 통한 상품 생성 API
     @Transactional
     public ProductResponse createProduct(CreateProductRequest request, User user) {
         // 베이스 상품 존재 여부 확인
@@ -43,19 +41,39 @@ public class ProductService {
         return ProductResponse.from(product, images);
     }
 
+    // 4. 현재 로그인한 유저가 등록한 상품 조회 API
     @Transactional
     public List<ProductDetailResponse> getUserProducts(User user) {
-        return productRepository.findByUserOrderByCreatedAtDesc(user).stream() // 사용자의 모든 상품 조회
+        // 유저가 등록한 상품 조회
+        List<Product> products = productRepository.findByUserOrderByCreatedAtDesc(user);
+
+        return products.stream()
                 .map(product -> {
-
-                    // 각 상품별 이미지 조회
+                    // 이미지 조회
                     List<ProductImage> images = productImageRepository.findByProductId(product.getId());
-
-                    // 각 상품별 리뷰 이력 조회
+                    // 리뷰 히스토리 조회
                     List<ProductReviewHistory> histories = productReviewHistoryRepository.findByProductOrderByCreatedAtDesc(product);
                     
                     return ProductDetailResponse.from(product, images, histories);
                 })
                 .toList();
+    }
+
+    // 5. 등록된 모든 상품 조회 API
+    @Transactional
+    public PageResponse<ProductListResponse> getRegisteredProducts(int page, int size) {
+        // 등록된 상품 중 승인된 상품만 조회 (Pagenation)
+        Page<Product> productPage = productRepository.findByCurrentStatusOrderByCreatedAtDesc(
+                ReviewStatus.APPROVED,
+                PageRequest.of(page, size) // pageable 객체 생성
+        );
+
+        // 이미지 포함 응답 생성
+        Page<ProductListResponse> responsePage = productPage.map(product -> {
+            List<ProductImage> images = productImageRepository.findByProductId(product.getId());
+            return ProductListResponse.from(product, images);
+        });
+
+        return PageResponse.from(responsePage);
     }
 }
