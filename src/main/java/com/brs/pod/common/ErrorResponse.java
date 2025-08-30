@@ -1,10 +1,14 @@
 package com.brs.pod.common;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
-    private final String message;
+    
+    private String errorCode;
+    private String message;
 }

@@ -5,12 +5,15 @@ import com.brs.pod.controller.dto.UserResponse;
 import com.brs.pod.repository.UserRepository;
 import com.brs.pod.repository.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
     
     private final UserRepository userRepository;
 
@@ -26,5 +29,18 @@ public class UserService {
         userRepository.save(user);
 
         return UserResponse.from(user);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getName())
+                .password(user.getPassword())
+                .roles("USER")
+                .build();
     }
 }
