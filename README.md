@@ -1,13 +1,14 @@
-# BRS POD CRUD
+## BRS POD CRUD
+
+- 스프링 연습을 위한 간단한 POD 서비스 CRUD 기능 구현
 
 ### ERD
 
 ![BRS POD ERD](brs-pod-erd.png)
 
-### API 요구사항 → 스프링 프로젝트를 통해 API 개발
+---
 
-> 앞서 설계한 ERD 기반으로 필요한 API 를 제공하기위해 @Controller 와 DTO 클래스 정의 및 개발 필요
-> API 파라미터와 반환값에 대한 제약사항도 함께 요구사항으로 전달하니 꼼꼼히 읽고 개발할것
+### API 요구사항 → 스프링 프로젝트를 통해 API 개발
 
 1. **아이디 / 패스워드 기반 로그인 API** = **BASIC 인증 설정만 하면되고 따로 개발하지 않는다**
 
@@ -58,7 +59,9 @@
      - **등록** 일때만 > **거절**으로 변경 가능
      - **승인** 일때만 > **금지**으로 변경 가능
 
-### API 명세서
+---
+
+### API 명세
 
 #### 1. 로그인 API
 
@@ -113,14 +116,14 @@
 - **Request Body**:
   ```json
   {
-    "status": "string" // REGISTERED, APPROVED, REJECTED, BANNED
+    "status": "string"
   }
   ```
 - **Request Body**:
   ```json
   {
-    "username": "string", // 최소 5자, 최대 10자
-    "password": "string" // 최소 8자, 대소문자 각 1개 이상 포함
+    "username": "string",
+    "password": "string"
   }
   ```
 - **Response**:
@@ -139,9 +142,9 @@
 - **Request Body**:
   ```json
   {
-    "title": "string", // 최대 20자
+    "title": "string",
     "baseProductId": "integer",
-    "images": ["string"] // 최소 1장, 최대 5장
+    "images": ["string"]
   }
   ```
 - **Response**: 상품 정보
@@ -200,13 +203,6 @@
 - **Request Body**:
   ```json
   {
-    "status": "string" // REGISTERED, APPROVED, REJECTED, BANNED
+    "status": "string"
   }
   ```
-- **Response**: 변경된 상품 정보와 리뷰 히스토리
-
-### 상태 변경 규칙
-
-- REGISTERED/REJECTED/BANNED → APPROVED 가능
-- REGISTERED → REJECTED 가능
-- APPROVED → BANNED 가능
