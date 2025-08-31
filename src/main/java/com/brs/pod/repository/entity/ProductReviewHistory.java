@@ -23,4 +23,13 @@ public class ProductReviewHistory {
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    public static ProductReviewHistory create(Product product, ReviewStatus reviewStatus, String reason) {
+        ProductReviewHistory history = new ProductReviewHistory();
+        history.product = product;
+        history.reviewStatus = reviewStatus;
+        history.reason = reason;
+        history.createdAt = LocalDateTime.now();
+        return history;
+    }
 }

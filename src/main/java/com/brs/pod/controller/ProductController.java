@@ -50,4 +50,12 @@ public class ProductController {
             @RequestParam(defaultValue = "10") @Min(1) int size) {
         return ResponseEntity.ok(productService.getRegisteredProducts(page, size));
     }
+
+    // 6. 등록된 상품에 대한 내부 리뷰 API
+    @PatchMapping("/{productId}/status")
+    public ResponseEntity<ProductDetailResponse> updateProductStatus(
+            @PathVariable Integer productId,
+            @Valid @RequestBody UpdateProductStatusRequest request) {
+        return ResponseEntity.ok(productService.updateProductStatus(productId, request));
+    }
 }

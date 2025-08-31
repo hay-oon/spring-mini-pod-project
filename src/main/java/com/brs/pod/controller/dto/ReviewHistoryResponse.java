@@ -13,11 +13,13 @@ import java.time.LocalDateTime;
 public class ReviewHistoryResponse {
     private final ReviewStatus status;
     private final LocalDateTime createdAt;
+    private final String reason;
 
     public static ReviewHistoryResponse from(ProductReviewHistory history) {
         return new ReviewHistoryResponse(
             history.getReviewStatus(),
-            history.getCreatedAt()
+            history.getCreatedAt(),
+            history.getReason()
         );
     }
 }

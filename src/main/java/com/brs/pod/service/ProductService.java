@@ -76,4 +76,19 @@ public class ProductService {
 
         return PageResponse.from(responsePage);
     }
+
+    // 6. 등록된 상품에 대한 내부 리뷰 API
+    @Transactional
+    public ProductDetailResponse updateProductStatus(Integer productId, UpdateProductStatusRequest request) {
+        // 상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+
+        // 상태 변경
+        product.updateStatus(request.getStatus(), request.getReason());
+        
+        // 이미지 포함 응답 생성
+        List<ProductImage> images = productImageRepository.findByProductId(product.getId());
+        return ProductDetailResponse.from(product, images, product.getReviewHistories());
+    }
 }
