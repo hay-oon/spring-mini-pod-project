@@ -57,3 +57,156 @@
      - **등록 / 거절 / 금지**일때만 > **승인**으로 변경 가능
      - **등록** 일때만 > **거절**으로 변경 가능
      - **승인** 일때만 > **금지**으로 변경 가능
+
+### API 명세서
+
+#### 1. 로그인 API
+
+- **Method**: BASIC Authentication
+- **Description**: Spring Security Basic 인증 사용
+
+#### 2. 회원가입 API
+
+- **Method**: POST
+- **Path**: `/api/users/signup`
+- **Request Body**:
+  ```json
+  {
+    "username": "string",
+    "password": "string"
+  }
+  ```
+
+#### 3. 상품 생성 API
+
+- **Method**: POST
+- **Path**: `/api/products`
+- **Auth**: Required
+- **Request Body**:
+  ```json
+  {
+    "title": "string",
+    "baseProductId": "integer",
+    "images": ["string"]
+  }
+  ```
+
+#### 4. 내 상품 목록 조회 API
+
+- **Method**: GET
+- **Path**: `/api/products/my`
+- **Auth**: Required
+
+#### 5. 승인된 상품 목록 조회 API
+
+- **Method**: GET
+- **Path**: `/api/products`
+- **Query Parameters**:
+  - `page`: integer (기본값: 0)
+  - `size`: integer (기본값: 10)
+
+#### 6. 상품 상태 변경 API
+
+- **Method**: PATCH
+- **Path**: `/api/products/{productId}/status`
+- **Auth**: Required
+- **Request Body**:
+  ```json
+  {
+    "status": "string" // REGISTERED, APPROVED, REJECTED, BANNED
+  }
+  ```
+- **Request Body**:
+  ```json
+  {
+    "username": "string", // 최소 5자, 최대 10자
+    "password": "string" // 최소 8자, 대소문자 각 1개 이상 포함
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "integer",
+    "username": "string"
+  }
+  ```
+
+#### 3. 상품 생성 API
+
+- **Method**: POST
+- **Path**: `/api/products`
+- **Auth**: Required
+- **Request Body**:
+  ```json
+  {
+    "title": "string", // 최대 20자
+    "baseProductId": "integer",
+    "images": ["string"] // 최소 1장, 최대 5장
+  }
+  ```
+- **Response**: 상품 정보
+
+#### 4. 내 상품 목록 조회 API
+
+- **Method**: GET
+- **Path**: `/api/products/my`
+- **Auth**: Required
+- **Response**:
+  ```json
+  [
+    {
+      "id": "integer",
+      "title": "string",
+      "currentStatus": "string",
+      "reviewHistories": [
+        {
+          "status": "string",
+          "createdAt": "datetime"
+        }
+      ]
+    }
+  ]
+  ```
+
+#### 5. 승인된 상품 목록 조회 API
+
+- **Method**: GET
+- **Path**: `/api/products`
+- **Query Parameters**:
+  - `page`: integer (기본값: 0)
+  - `size`: integer (기본값: 10)
+- **Response**:
+  ```json
+  {
+    "content": [
+      {
+        "id": "integer",
+        "title": "string",
+        "currentStatus": "string"
+      }
+    ],
+    "totalPages": "integer",
+    "totalElements": "integer",
+    "size": "integer",
+    "number": "integer"
+  }
+  ```
+
+#### 6. 상품 상태 변경 API
+
+- **Method**: PATCH
+- **Path**: `/api/products/{productId}/status`
+- **Auth**: Required
+- **Request Body**:
+  ```json
+  {
+    "status": "string" // REGISTERED, APPROVED, REJECTED, BANNED
+  }
+  ```
+- **Response**: 변경된 상품 정보와 리뷰 히스토리
+
+### 상태 변경 규칙
+
+- REGISTERED/REJECTED/BANNED → APPROVED 가능
+- REGISTERED → REJECTED 가능
+- APPROVED → BANNED 가능
