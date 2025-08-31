@@ -18,9 +18,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/signup").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() // 회원가입 API 제외 모두 인증 필요
             )
-            .httpBasic(basic -> {}) //BasicAuthenticationFilter 등록
+            .httpBasic(basic -> {}) // BASIC 인증 활성화 (BasicAuthenticationFilter 등록)
             .build();
     }
 
