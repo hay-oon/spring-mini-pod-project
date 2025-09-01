@@ -2,7 +2,6 @@ package com.brs.pod.controller.dto;
 
 import com.brs.pod.repository.entity.Product;
 import com.brs.pod.repository.entity.ProductImage;
-import com.brs.pod.repository.entity.ProductReviewHistory;
 import com.brs.pod.repository.vo.ReviewStatus;
 
 import lombok.AllArgsConstructor;
@@ -22,21 +21,17 @@ public class ProductDetailResponse {
     private final List<String> imageUrls;
     private final List<ReviewHistoryResponse> reviewHistories;
 
-    public static ProductDetailResponse from(
-            Product product, 
-            List<ProductImage> images,
-            List<ProductReviewHistory> histories
-    ) {
+    public static ProductDetailResponse from( Product product) {
         return new ProductDetailResponse(
             product.getId(),
             product.getTitle(),
             product.getCurrentStatus(),
             product.getCreatedAt(),
             product.getBaseProduct().getId(),
-            images.stream()
+            product.getImages().stream()
                 .map(ProductImage::getImageUrl)
                 .toList(),
-            histories.stream()
+            product.getReviewHistories().stream()
                 .map(ReviewHistoryResponse::from)
                 .toList()
         );

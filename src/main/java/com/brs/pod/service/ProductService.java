@@ -19,7 +19,6 @@ public class ProductService {
     private final BaseProductRepository baseProductRepository;
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
-    private final ProductReviewHistoryRepository productReviewHistoryRepository;
 
     // 3. 사진 업로드를 통한 상품 생성 API
     @Transactional
@@ -28,6 +27,7 @@ public class ProductService {
         BaseProduct baseProduct = baseProductRepository.findById(request.getBaseProductId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 베이스 상품입니다."));
 
+        //product cascade
         // 상품 생성
         Product product = Product.create(request.getTitle(), baseProduct, user);
         productRepository.save(product);
@@ -46,16 +46,8 @@ public class ProductService {
     public List<ProductDetailResponse> getUserProducts(User user) {
         // 유저가 등록한 상품 조회
         List<Product> products = productRepository.findByUserOrderByCreatedAtDesc(user);
-
         return products.stream()
-                .map(product -> {
-                    // 이미지 조회
-                    List<ProductImage> images = productImageRepository.findByProductId(product.getId());
-                    // 리뷰 히스토리 조회
-                    List<ProductReviewHistory> histories = productReviewHistoryRepository.findByProductOrderByCreatedAtDesc(product);
-                    
-                    return ProductDetailResponse.from(product, images, histories);
-                })
+                .map(ProductDetailResponse::from)
                 .toList();
     }
 
@@ -69,6 +61,8 @@ public class ProductService {
         );
 
         // 이미지 포함 응답 생성
+        // productId
+        // 페이지네이션 데이터 누락 문제 고려 (테스트 필요)
         Page<ProductListResponse> responsePage = productPage.map(product -> {
             List<ProductImage> images = productImageRepository.findByProductId(product.getId());
             return ProductListResponse.from(product, images);
@@ -87,8 +81,7 @@ public class ProductService {
         // 상태 변경
         product.updateStatus(request.getStatus(), request.getReason());
         
-        // 이미지 포함 응답 생성
-        List<ProductImage> images = productImageRepository.findByProductId(product.getId());
-        return ProductDetailResponse.from(product, images, product.getReviewHistories());
+
+        return ProductDetailResponse.from(product);
     }
 }
