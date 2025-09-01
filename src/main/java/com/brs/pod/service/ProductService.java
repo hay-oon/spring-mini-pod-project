@@ -27,17 +27,16 @@ public class ProductService {
         BaseProduct baseProduct = baseProductRepository.findById(request.getBaseProductId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 베이스 상품입니다."));
 
-        //product cascade
         // 상품 생성
         Product product = Product.create(request.getTitle(), baseProduct, user);
-        productRepository.save(product);
-
-        // 이미지 생성
+        
+        // 이미지 생성 및 연결
         List<ProductImage> images = request.getImageUrls().stream()
                 .map(url -> ProductImage.create(url, product))
                 .toList();
-        productImageRepository.saveAll(images);
-
+        product.getImages().addAll(images);  // cascade로 인해 자동 저장됨
+        
+        productRepository.save(product);
         return ProductResponse.from(product, images);
     }
 
