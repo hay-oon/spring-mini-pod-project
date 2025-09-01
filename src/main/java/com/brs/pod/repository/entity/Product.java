@@ -31,8 +31,13 @@ public class Product {
     private BaseProduct baseProduct;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductReviewHistory> reviewHistories = new ArrayList<>();
 
+    // updateStatus 처럼 처리
+    // productImageRepository.saveAll(images); 없어도 됨
     public static Product create(String title, BaseProduct baseProduct, User user) {
         Product product = new Product();
         product.title = title;
